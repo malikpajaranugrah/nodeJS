@@ -1,0 +1,91 @@
+// Name : Malik Pajar Anugrah
+// NIM  : 20220040128
+
+const express = require('express');
+const app = express();
+const port = 8000;
+
+var motoGP = [
+  {
+    circuit: 'Losail',
+    location: 'Qatar',
+    winner: {
+      firstName: 'Andrea',
+      lastName: 'Dovizioso',
+      country: 'Italy',
+    },
+  },
+
+  {
+    circuit: 'Autodromo',
+    location: 'Argentine',
+    winner: {
+      firstName: 'Cal',
+      lastName: 'Crutchlow',
+      country: 'UK',
+    },
+  },
+
+  {
+    circuit: 'De Jerez',
+    location: 'Spain',
+    winner: {
+      firstName: 'Valentino',
+      lastName: 'Rossi',
+      country: 'Italy',
+    },
+  },
+
+  {
+    circuit: 'Mugello',
+    location: 'Italy',
+    winner: {
+      firstName: 'Andrea',
+      lastName: 'Dovizioso',
+      country: 'Italy',
+    },
+  },
+];
+
+app.get('/', (req, res) => {
+  res.json(motoGP);
+});
+
+app.get('/country', (req, res) => {
+  const countryGroups = {};
+
+  motoGP.forEach(item => {
+    const country = item.winner.country;
+    if (!countryGroups[country]) {
+      countryGroups[country] = [];
+    }
+    countryGroups[country].push(item);
+  });
+
+  res.json(countryGroups);
+});
+
+app.get('/name', (req, res) => {
+  const nameGroups = {};
+
+  motoGP.forEach(item => {
+    const { firstName, lastName } = item.winner;
+    const fullName = `${firstName} ${lastName}`;
+    if (!nameGroups[fullName]) {
+      nameGroups[fullName] = [];
+    }
+    nameGroups[fullName].push(item);
+  });
+
+  res.json(nameGroups);
+});
+
+
+// Added "Bad Request" handling if the URL address does not match an existing route.
+app.use((req, res) => {
+  res.status(400).send('Bad Request');
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
